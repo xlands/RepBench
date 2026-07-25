@@ -1,0 +1,540 @@
+{
+  "generated_at": "2026-06-03",
+  "plan_source": "/home/work/compass_max_posttrain/yanshi/latent_representation_benchmark/tmp_doc/benchmark_paper_plan.html",
+  "benchmark_root": "/home/work/compass_max_new_5/xueru/benchmark",
+  "headline": {
+    "concepts": 53,
+    "main_models_completed": 9,
+    "families": 3,
+    "moe_models_running": 1,
+    "mc_concepts": 39,
+    "gen_concepts": 14,
+    "llm_reason_trace_concepts": 39,
+    "llm_reason_trace_rows": 2496,
+    "cross_transfer_models": 9
+  },
+  "primary_models": [
+    {
+      "name": "Qwen3-0.6B",
+      "short": "Qwen0.6B",
+      "label": "qwen3_0.6b",
+      "family": "Qwen3",
+      "params_b": 0.6,
+      "run": "results/ability53_qwen3_0.6b_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.77,
+        "ge_0_8": 28,
+        "lt_0_7": 19,
+        "source": "results/ability53_qwen3_0.6b_final_single_20260523_171412/readability/qwen3_0.6b/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 49,
+        "mean_delta": 0.2112,
+        "positive": 37,
+        "negative": 1,
+        "neutral": 11,
+        "samples": 317470,
+        "source": "results/ability53_qwen3_0.6b_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "Qwen3-1.7B",
+      "short": "Qwen1.7B",
+      "label": "qwen3_1.7b",
+      "family": "Qwen3",
+      "params_b": 1.7,
+      "run": "results/ability53_qwen3_1.7b_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.801,
+        "ge_0_8": 30,
+        "lt_0_7": 20,
+        "source": "results/ability53_qwen3_1.7b_final_single_20260523_171412/readability/qwen3_1.7b/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 45,
+        "mean_delta": 0.2059,
+        "positive": 35,
+        "negative": 0,
+        "neutral": 10,
+        "samples": 282363,
+        "source": "results/ability53_qwen3_1.7b_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "Gemma2-2B",
+      "short": "Gemma2B",
+      "label": "gemma2_2b_it",
+      "family": "Gemma2",
+      "params_b": 2,
+      "run": "results/ability53_gemma2_2b_it_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.829,
+        "ge_0_8": 35,
+        "lt_0_7": 14,
+        "source": "results/ability53_gemma2_2b_it_final_single_20260523_171412/readability/gemma2_2b_it/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 44,
+        "mean_delta": 0.0574,
+        "positive": 20,
+        "negative": 7,
+        "neutral": 17,
+        "samples": 261115,
+        "source": "results/ability53_gemma2_2b_it_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "LLaMA3.1-8B",
+      "short": "Llama8B",
+      "label": "llama3.1_8b",
+      "family": "LLaMA3",
+      "params_b": 8,
+      "run": "results/ability53_llama3.1_8b_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.83,
+        "ge_0_8": 34,
+        "lt_0_7": 14,
+        "source": "results/ability53_llama3.1_8b_final_single_20260523_171412/readability/llama3.1_8b/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 41,
+        "mean_delta": 0.1122,
+        "positive": 25,
+        "negative": 5,
+        "neutral": 11,
+        "samples": 261312,
+        "source": "results/ability53_llama3.1_8b_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "Gemma2-9B",
+      "short": "Gemma9B",
+      "label": "gemma2_9b_it",
+      "family": "Gemma2",
+      "params_b": 9,
+      "run": "results/ability53_gemma2_9b_it_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.858,
+        "ge_0_8": 36,
+        "lt_0_7": 9,
+        "source": "results/ability53_gemma2_9b_it_final_single_20260523_171412/readability/gemma2_9b_it/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 42,
+        "mean_delta": 0.0675,
+        "positive": 19,
+        "negative": 8,
+        "neutral": 15,
+        "samples": 266315,
+        "source": "results/ability53_gemma2_9b_it_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "Qwen3-14B",
+      "short": "Qwen14B",
+      "label": "qwen3_14b",
+      "family": "Qwen3",
+      "params_b": 14,
+      "run": "results/ability53_qwen3_14b_8gpu_parallel_bestonly_20260523_054943",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.871,
+        "ge_0_8": 40,
+        "lt_0_7": 9,
+        "source": "results/ability53_qwen3_14b_8gpu_parallel_bestonly_20260523_054943/analysis/readability_concept_summary.csv"
+      },
+      "steerability": {
+        "concepts": 53,
+        "mean_delta": 0.1191,
+        "positive": 29,
+        "negative": 2,
+        "neutral": 22,
+        "samples": 322227,
+        "source": "results/ability53_qwen3_14b_8gpu_parallel_bestonly_20260523_054943/stage2b_final_alpha5_merged_from_extended_plus_minimal_override/analysis/ability53_official_rescore/concept_weighted_summary.csv"
+      }
+    },
+    {
+      "name": "Gemma2-27B",
+      "short": "Gemma27B",
+      "label": "gemma2_27b_it",
+      "family": "Gemma2",
+      "params_b": 27,
+      "run": "results/ability53_gemma2_27b_it_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.811,
+        "ge_0_8": 35,
+        "lt_0_7": 14,
+        "source": "results/ability53_gemma2_27b_it_final_single_20260523_171412/readability/gemma2_27b_it/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 48,
+        "mean_delta": 0.0212,
+        "positive": 19,
+        "negative": 9,
+        "neutral": 20,
+        "samples": 280960,
+        "source": "results/ability53_gemma2_27b_it_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "Qwen3-32B",
+      "short": "Qwen32B",
+      "label": "qwen3_32b",
+      "family": "Qwen3",
+      "params_b": 32,
+      "run": "results/ability53_qwen3_32b_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.881,
+        "ge_0_8": 41,
+        "lt_0_7": 5,
+        "source": "results/ability53_qwen3_32b_final_single_20260523_171412/readability/qwen3_32b/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 51,
+        "mean_delta": 0.1806,
+        "positive": 41,
+        "negative": 0,
+        "neutral": 10,
+        "samples": 321915,
+        "source": "results/ability53_qwen3_32b_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    },
+    {
+      "name": "LLaMA3.1-70B",
+      "short": "Llama70B",
+      "label": "llama3.1_70b",
+      "family": "LLaMA3",
+      "params_b": 70,
+      "run": "results/ability53_llama3.1_70b_final_single_20260523_171412",
+      "readability": {
+        "concepts": 53,
+        "mean_acc": 0.881,
+        "ge_0_8": 41,
+        "lt_0_7": 6,
+        "source": "results/ability53_llama3.1_70b_final_single_20260523_171412/readability/llama3.1_70b/benchmark_mc_readout_results.csv"
+      },
+      "steerability": {
+        "concepts": 46,
+        "mean_delta": 0.0616,
+        "positive": 23,
+        "negative": 8,
+        "neutral": 15,
+        "samples": 261915,
+        "source": "results/ability53_llama3.1_70b_final_single_20260523_171412/stage2b_final_balanced/analysis/ability53_official_rescore/generation_trace_official_rescore_summary.csv"
+      }
+    }
+  ],
+  "cross_benchmark_transfer": [
+    {
+      "model": "gemma2_27b_it",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 3,
+      "avg_ood_acc": 0.53,
+      "source": "results/cross_benchmark_transfer_v2/gemma2_27b_it/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "gemma2_2b_it",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 8,
+      "avg_ood_acc": 0.639,
+      "source": "results/cross_benchmark_transfer_v2/gemma2_2b_it/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "gemma2_9b_it",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 7,
+      "avg_ood_acc": 0.664,
+      "source": "results/cross_benchmark_transfer_v2/gemma2_9b_it/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "llama3.1_70b",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 9,
+      "avg_ood_acc": 0.729,
+      "source": "results/cross_benchmark_transfer_v2/llama3.1_70b/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "llama3.1_8b",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 8,
+      "avg_ood_acc": 0.67,
+      "source": "results/cross_benchmark_transfer_v2/llama3.1_8b/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "qwen3_0.6b",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 1,
+      "avg_ood_acc": 0.477,
+      "source": "results/cross_benchmark_transfer_v2/qwen3_0.6b/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "qwen3_1.7b",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 7,
+      "avg_ood_acc": 0.597,
+      "source": "results/cross_benchmark_transfer_v2/qwen3_1.7b/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "qwen3_14b",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 9,
+      "avg_ood_acc": 0.75,
+      "source": "results/cross_benchmark_transfer_v2/qwen3_14b/cross_benchmark_readout_transfer.csv"
+    },
+    {
+      "model": "qwen3_32b",
+      "pairs": 11,
+      "positive_pairs": 10,
+      "success_gt_0_55": 7,
+      "avg_ood_acc": 0.702,
+      "source": "results/cross_benchmark_transfer_v2/qwen3_32b/cross_benchmark_readout_transfer.csv"
+    }
+  ],
+  "construction_ablation_generation": [
+    {
+      "model": "gemma2_2b_it",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_generation/gemma2_2b_it/construction_ablation_generation.csv",
+      "base": 0.49,
+      "delta_A": 0.069,
+      "delta_B": -0.034,
+      "delta_C": 0.031,
+      "delta_D": -0.014,
+      "delta_E": -0.034
+    },
+    {
+      "model": "llama3.1_8b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_generation/llama3.1_8b/construction_ablation_generation.csv",
+      "base": 0.507,
+      "delta_A": 0.058,
+      "delta_B": 0.041,
+      "delta_C": -0.03,
+      "delta_D": 0.01,
+      "delta_E": -0.026
+    },
+    {
+      "model": "qwen3_0.6b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_generation/qwen3_0.6b/construction_ablation_generation.csv",
+      "base": 0.046,
+      "delta_A": 0.174,
+      "delta_B": 0.014,
+      "delta_C": 0.044,
+      "delta_D": 0.032,
+      "delta_E": 0.026
+    },
+    {
+      "model": "qwen3_1.7b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_generation/qwen3_1.7b/construction_ablation_generation.csv",
+      "base": 0.05,
+      "delta_A": 0.161,
+      "delta_B": -0.018,
+      "delta_C": 0.022,
+      "delta_D": 0.05,
+      "delta_E": 0.019
+    }
+  ],
+  "construction_ablation_cross_format": [
+    {
+      "experiment": "construction_ablation_cross_format",
+      "model": "llama3.1_8b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_cross_format/llama3.1_8b/construction_ablation_generation.csv",
+      "delta_A": 0.059,
+      "delta_E": -0.026,
+      "delta_A_gen": 0.013,
+      "delta_E_gen": -0.018
+    },
+    {
+      "experiment": "construction_ablation_cross_format",
+      "model": "qwen3_0.6b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_cross_format/qwen3_0.6b/construction_ablation_generation.csv",
+      "delta_A": 0.173,
+      "delta_E": 0.025,
+      "delta_A_gen": 0.057,
+      "delta_E_gen": 0.023
+    },
+    {
+      "experiment": "construction_ablation_cross_format_f",
+      "model": "llama3.1_8b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_cross_format_f/llama3.1_8b/construction_ablation_generation.csv",
+      "delta_A": 0.058,
+      "delta_E": -0.026,
+      "delta_F": -0.01,
+      "delta_A_gen": 0.013,
+      "delta_E_gen": -0.018,
+      "delta_F_gen": -0.013
+    },
+    {
+      "experiment": "construction_ablation_cross_format_f",
+      "model": "qwen3_0.6b",
+      "n_concepts": 39,
+      "source": "results/construction_ablation_cross_format_f/qwen3_0.6b/construction_ablation_generation.csv",
+      "delta_A": 0.209,
+      "delta_E": 0.026,
+      "delta_F": 0.046,
+      "delta_A_gen": 0.071,
+      "delta_E_gen": 0.015,
+      "delta_F_gen": 0.014
+    }
+  ],
+  "other_positive_pilot": [
+    {
+      "run": "ability53_llama3.1_8b_other_positive_pilot_20260602_010222",
+      "source": "results/ability53_llama3.1_8b_other_positive_pilot_20260602_010222",
+      "diffmean_read_mean": 0.756,
+      "other_positive_diffmean_pca_read_mean": 0.631,
+      "diffmean_stage2_mean_delta": -0.104,
+      "diffmean_stage2_positive": 17,
+      "diffmean_stage2_n": 150,
+      "other_positive_diffmean_pca_stage2_mean_delta": -0.119,
+      "other_positive_diffmean_pca_stage2_positive": 14,
+      "other_positive_diffmean_pca_stage2_n": 145
+    },
+    {
+      "run": "ability53_qwen3_0.6b_other_positive_pilot_20260602_005142",
+      "source": "results/ability53_qwen3_0.6b_other_positive_pilot_20260602_005142",
+      "diffmean_read_mean": 0.656,
+      "other_positive_diffmean_pca_read_mean": 0.55,
+      "diffmean_stage2_mean_delta": 0.018,
+      "diffmean_stage2_positive": 11,
+      "diffmean_stage2_n": 135,
+      "other_positive_diffmean_pca_stage2_mean_delta": 0.004,
+      "other_positive_diffmean_pca_stage2_positive": 8,
+      "other_positive_diffmean_pca_stage2_n": 150
+    },
+    {
+      "run": "ability53_qwen3_1.7b_other_positive_pilot_20260602_010222",
+      "source": "results/ability53_qwen3_1.7b_other_positive_pilot_20260602_010222",
+      "diffmean_read_mean": 0.725,
+      "other_positive_diffmean_pca_read_mean": 0.594,
+      "diffmean_stage2_mean_delta": 0.01,
+      "diffmean_stage2_positive": 13,
+      "diffmean_stage2_n": 150,
+      "other_positive_diffmean_pca_stage2_mean_delta": 0.017,
+      "other_positive_diffmean_pca_stage2_positive": 17,
+      "other_positive_diffmean_pca_stage2_n": 150
+    },
+    {
+      "run": "ability53_qwen3_14b_other_positive_pilot_20260602_010222",
+      "source": "results/ability53_qwen3_14b_other_positive_pilot_20260602_010222",
+      "diffmean_read_mean": 0.819,
+      "other_positive_diffmean_pca_read_mean": 0.656,
+      "diffmean_stage2_mean_delta": 0.02,
+      "diffmean_stage2_positive": 18,
+      "diffmean_stage2_n": 150,
+      "other_positive_diffmean_pca_stage2_mean_delta": 0.013,
+      "other_positive_diffmean_pca_stage2_positive": 19,
+      "other_positive_diffmean_pca_stage2_n": 150
+    }
+  ],
+  "moe_status": {
+    "run_root": "results/ability53_qwen3_30b_a3b_4shard",
+    "stage2_done_workers": 3,
+    "stage2b_done_workers": 0,
+    "expected_workers": 4,
+    "latest_log": "results/ability53_qwen3_30b_a3b_4shard/logs/progressive_worker_3.log",
+    "latest_line": "2026-06-03 01:30:03,881 | INFO | [geometric_reasoning] gen_max_new_tokens by prompt_type: 128:16"
+  },
+  "progress_matrix": [
+    {
+      "experiment": "Exp 1: Readability Profiling",
+      "rq": "RQ1",
+      "status": "partial_done",
+      "progress": "9 个主模型已有 16-question readability；Qwen3-14B 修正为 53 concept summary 口径；stage2b_final 全量 readability 仍未实现。"
+    },
+    {
+      "experiment": "Exp 2: Steerability Evaluation",
+      "rq": "RQ2",
+      "status": "done_core",
+      "progress": "9 个主模型 stage2b official rescore 已完成；LLaMA3.1-70B 已补齐；LLaMA3.2-1B/3B 无新增。"
+    },
+    {
+      "experiment": "Exp 3: Readability-Steerability Relationship",
+      "rq": "RQ3",
+      "status": "todo_analysis",
+      "progress": "配对数据基本齐备，但还缺 Spearman/Pearson、四象限和 scatter 可视化分析。"
+    },
+    {
+      "experiment": "Exp 4: Scaling Analysis",
+      "rq": "RQ4",
+      "status": "partial_done",
+      "progress": "Qwen3 4 点、Gemma2 3 点、LLaMA3.1 2 点已可画主曲线；Qwen3-30B-A3B MoE 正在跑；Qwen3-4B/8B 和 LLaMA3.2 仍可选。"
+    },
+    {
+      "experiment": "Exp 5: Output vs Representation",
+      "rq": "RQ5",
+      "status": "todo_analysis",
+      "progress": "baseline/output score 可从 generation traces 或 official scorer 提取，但尚未形成解耦分析。"
+    },
+    {
+      "experiment": "Exp 6: Concept Family Analysis",
+      "rq": "RQ6",
+      "status": "todo_analysis",
+      "progress": "53 concept 数据齐备；family taxonomy 需要定稿并跑分组统计。"
+    },
+    {
+      "experiment": "Exp 7a: Direction Construction Ablation",
+      "rq": "Method",
+      "status": "done_pilot",
+      "progress": "diffmean/pair_pca/linear_probe 主流程已跑；other_positive_diffmean_pca 4 模型 pilot 已汇总，readability 明显弱于 diffmean。"
+    },
+    {
+      "experiment": "Exp 7b: Construction / Format Ablation",
+      "rq": "Method",
+      "status": "done_core",
+      "progress": "4 模型 generation+official-scorer 构造消融完成；A(MC) 全面领先。0.6B/8B 的 A/E/F cross-format 中间态已完成。"
+    }
+  ],
+  "open_gaps": [
+    {
+      "priority": "P0",
+      "task": "Readability 改 stage2b_final 全量评估",
+      "why": "当前 16-question val 方差较大，直接影响 RQ1/RQ3 可信度。"
+    },
+    {
+      "priority": "P0",
+      "task": "Readability-Steerability 相关性分析",
+      "why": "数据已基本齐备，是证明两个维度互补的核心发现。"
+    },
+    {
+      "priority": "P0",
+      "task": "Output score vs representation quality 解耦分析",
+      "why": "证明 RepBench 不是普通输出 benchmark 的冗余。"
+    },
+    {
+      "priority": "P1",
+      "task": "Concept family taxonomy 与分组统计",
+      "why": "补充论文 insight，并连接安全/伦理/推理等能力家族。"
+    },
+    {
+      "priority": "P1",
+      "task": "MoE Qwen3-30B-A3B 完成 stage2b/rescore/迁移",
+      "why": "作为 scaling 和 limitation 讨论的扩展模型。"
+    },
+    {
+      "priority": "P1/P2",
+      "task": "LLaMA3.2-1B/3B 或 Qwen3-4B/8B 补点",
+      "why": "增强 scaling 曲线，但不是 9 模型主结论的前置条件。"
+    }
+  ]
+}

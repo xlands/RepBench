@@ -1,0 +1,6 @@
+tmp_doc/
+tmp_scripts/
+
+__pycache__/
+*.pyc
+.DS_Store

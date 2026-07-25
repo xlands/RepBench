@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Probe method x model evaluation (LOBO)</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+    --fold: #a9a7a0; --hover-wash: rgba(11,11,11,0.045);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+      --fold: #5c5b56; --hover-wash: rgba(255,255,255,0.06);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body.viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+  }
+  header { padding: 12px 20px 10px; border-bottom: 1px solid var(--grid);
+           display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 16px; font-weight: 650; }
+  header .stats { color: var(--text-secondary); font-size: 12.5px; }
+  main { max-width: 1360px; margin: 0 auto; padding: 16px 20px 26px; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: stretch; }
+  .card { background: var(--surface-1); border: 1px solid var(--border);
+          border-radius: 10px; padding: 14px 16px 10px; }
+  .big { flex: 3; min-width: 620px; } .side { flex: 1; min-width: 260px; }
+  .card h2 { font-size: 13.5px; font-weight: 650; margin: 0 0 10px; }
+  svg { width: 100%; display: block; }
+  .axtxt { fill: var(--text-muted); font-size: 11px; }
+  .axttl { fill: var(--text-muted); font-size: 11.5px; }
+  .gl { stroke: var(--grid); stroke-width: 1; }
+  .blab { fill: var(--text-secondary); font-size: 10px; font-weight: 600; }
+  .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--text-secondary);
+            margin-top: 8px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; }
+  .grand { display: flex; gap: 10px; margin: 2px 0 4px; }
+  .grand .g { background: var(--hover-wash); border: 1px solid var(--border);
+              border-radius: 8px; padding: 8px 12px; flex: 1; }
+  .grand .v { font-size: 20px; font-weight: 650; }
+  .grand .k { font-size: 11px; color: var(--text-muted); }
+  .wrow { display: flex; align-items: center; gap: 9px; margin: 9px 0; }
+  .wrow .nm { width: 74px; font-size: 12.5px; }
+  .wbar { height: 16px; border-radius: 4px; flex: 0 0 auto; }
+  .wrow .pc { color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .sidenote { color: var(--text-muted); font-size: 11.5px; margin-top: 8px; line-height: 1.5; }
+  .foot { color: var(--text-muted); font-size: 12px; line-height: 1.6;
+          margin-top: 14px; max-width: 1200px; }
+  .foot b { color: var(--text-secondary); }
+  #tt { position: fixed; pointer-events: none; display: none; z-index: 10;
+        background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+        padding: 7px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+</style>
+</head>
+<body class="viz-root">
+<header>
+  <h1>Probe method × model evaluation</h1>
+  <span class="stats">leave-one-benchmark-out (LOBO) AUC · each model at its own best layer · mean over capability clusters</span>
+</header>
+<main>
+<div class="row">
+ <div class="card big">
+  <h2>Mean LOBO AUC per model, three probe methods</h2>
+  <svg id="bars"></svg>
+  <div class="legend">
+   <span><i style="background:var(--series-1)"></i>diff-mean (training-free)</span>
+   <span><i style="background:var(--series-2)"></i>LR (L2, C=0.1)</span>
+   <span><i style="background:var(--series-3)"></i>PCA (top-10, oriented)</span>
+  </div>
+ </div>
+ <div class="card side">
+  <h2>Grand mean across models</h2>
+  <div class="grand" id="grand"></div>
+  <h2 style="margin-top:16px">Per (cluster × model) cell: which method wins</h2>
+  <div style="color:var(--text-muted);font-size:12px;margin-bottom:6px" id="ncell"></div>
+  <div id="wins"></div>
+  <div class="sidenote">LR ekes out wins on many easy near-ceiling clusters;
+   diff-mean never crashes on the hard ones, so its mean stays highest.</div>
+ </div>
+</div>
+<div class="foot"><b>Reading.</b> The ranking depends on the statistic. By mean LOBO AUC, <b><span id="dmclaim"></span></b> —
+the highest floor, the most robust on hard clusters, and training-free — making it the best single default. By
+<b>per-cell win count LR wins the most cells</b>, so it remains the capacity reference. PCA trails on both. The
+method axis separates more (~0.05 between method means) than the model axis (~0.02 between models), so the probe
+method itself is a meaningful evaluation dimension.</div>
+</main>
+<div id="tt"></div>
+<script>
+const D={"order": ["qwen3-0.6b", "qwen3-1.7b", "qwen3-4b", "qwen3-8b", "qwen3-32b", "qwen3.5-9b", "llama3.1-8b", "gemma2-9b", "gemma4-12b", "gemma4-31b", "deepseek-r1-8b"], "perModel": {"qwen3-0.6b": {"diffmean": 0.775, "lr": 0.746, "pca": 0.71}, "qwen3-1.7b": {"diffmean": 0.776, "lr": 0.764, "pca": 0.726}, "qwen3-4b": {"diffmean": 0.79, "lr": 0.779, "pca": 0.724}, "qwen3-8b": {"diffmean": 0.785, "lr": 0.748, "pca": 0.736}, "qwen3-32b": {"diffmean": 0.794, "lr": 0.782, "pca": 0.739}, "qwen3.5-9b": {"diffmean": 0.795, "lr": 0.769, "pca": 0.755}, "llama3.1-8b": {"diffmean": 0.788, "lr": 0.762, "pca": 0.734}, "gemma2-9b": {"diffmean": 0.792, "lr": 0.781, "pca": 0.73}, "gemma4-12b": {"diffmean": 0.794, "lr": 0.772, "pca": 0.762}, "gemma4-31b": {"diffmean": 0.79, "lr": 0.776, "pca": 0.737}, "deepseek-r1-8b": {"diffmean": 0.732, "lr": 0.754, "pca": 0.666}}, "methods": [["diffmean", "diff-mean"], ["lr", "LR"], ["pca", "PCA"]], "display": {"deepseek-r1-8b": "r1-distill-8b", "deepseek-v4-flash": "dsv4-flash-base"}, "grand": {"diffmean": 0.783, "lr": 0.767, "pca": 0.729}, "win": {"diffmean": 384, "lr": 473, "pca": 177}, "winpct": {"diffmean": 37, "lr": 46, "pca": 17}, "ncell": 1034, "dmclaim": "diff-mean has the highest mean on 10 of 11 models — the exception: r1-distill-8b (LR 0.754 > dm 0.732)"};
+const css = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+const KEY2VAR = {diffmean:'--series-1', lr:'--series-2', pca:'--series-3'};
+const tt=document.getElementById('tt');
+function grand(){
+  document.getElementById('dmclaim').textContent=D.dmclaim;
+  document.getElementById('grand').innerHTML=D.methods.map(([k,lab])=>
+   `<div class="g"><div class="v" style="color:${css(KEY2VAR[k])}">${D.grand[k].toFixed(3)}</div><div class="k">${lab}</div></div>`).join('');
+  document.getElementById('ncell').textContent=`${D.ncell} cells with all three methods`;
+  const wtot=D.win.diffmean+D.win.lr+D.win.pca;
+  document.getElementById('wins').innerHTML=[['lr','LR'],['diffmean','diff-mean'],['pca','PCA']].map(([k,lab])=>
+   `<div class="wrow"><span class="nm">${lab}</span>
+    <span class="wbar" style="width:${180*D.win[k]/wtot}px;background:${css(KEY2VAR[k])}"></span>
+    <span class="pc">${D.winpct[k]}% · ${D.win[k]}</span></div>`).join('');
+}
+function bars(){
+ const svg=document.getElementById('bars'),W=svg.clientWidth||820,H=360;
+ svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ const P={l:46,r:12,t:16,b:70},iw=W-P.l-P.r,ih=H-P.t-P.b;
+ let vmin=1,vmax=0;
+ D.order.forEach(t=>D.methods.forEach(([k])=>{const v=D.perModel[t][k];
+   if(v<vmin)vmin=v; if(v>vmax)vmax=v;}));
+ const y0=Math.min(0.60,Math.floor((vmin-0.02)*20)/20), y1=Math.max(0.82,vmax+0.02);
+ const Y=v=>P.t+ih-ih*(v-y0)/(y1-y0);
+ let s='';
+ for(let g=0;g<=4;g++){const v=y0+(y1-y0)*g/4,y=Y(v);
+  s+=`<line class="gl" x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}"/>`;
+  s+=`<text class="axtxt" x="${P.l-6}" y="${y+3}" text-anchor="end">${v.toFixed(2)}</text>`;}
+ s+=`<text class="axttl" transform="translate(12 ${P.t+ih/2}) rotate(-90)" text-anchor="middle">mean LOBO AUC</text>`;
+ const n=D.order.length, gw=iw/n, bw=Math.min(16,(gw-12)/3);
+ let slab='';
+ D.order.forEach((t,i)=>{const gx=P.l+gw*i+(gw-bw*3-6)/2, name=D.display[t]||t;
+  D.methods.forEach(([k,lab],j)=>{const v=D.perModel[t][k],x=gx+j*(bw+3),y=Y(v),h=P.t+ih-y;
+   s+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}"
+        rx="3" fill="${css(KEY2VAR[k])}" data-t="${name}" data-m="${lab}" data-v="${v}"/>`;
+   if(k==='diffmean')slab+=`<text class="blab" x="${(x+bw/2).toFixed(1)}" y="${(y-4).toFixed(1)}" text-anchor="middle">${v.toFixed(3)}</text>`;});
+  const cx=P.l+gw*i+gw/2;
+  slab+=`<text class="axtxt" x="${cx.toFixed(1)}" y="${H-P.b+18}" text-anchor="end"
+       transform="rotate(-32 ${cx.toFixed(1)} ${H-P.b+18})">${name}</text>`;});
+ svg.innerHTML=s+slab;
+ svg.querySelectorAll('rect[data-t]').forEach(r=>{
+  r.addEventListener('mouseenter',()=>{r.style.opacity=.8;tt.style.display='block';
+   tt.innerHTML=`<b>${r.dataset.t}</b> · ${r.dataset.m}<br>AUC ${r.dataset.v}`;});
+  r.addEventListener('mousemove',e=>{tt.style.left=(e.clientX+12)+'px';tt.style.top=(e.clientY+12)+'px';});
+  r.addEventListener('mouseleave',()=>{r.style.opacity='';tt.style.display='none';});});
+}
+function render(){grand();bars();}
+render();addEventListener('resize',render);
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+</script>
+</body>
+</html>

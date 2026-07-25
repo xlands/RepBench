@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" role="img">
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="92" y="30" font-family="-apple-system, Segoe UI, sans-serif" font-size="21" font-weight="700" fill="#1a1f25">Readability vs. Steerability</text>
+  <text x="92" y="52" font-family="-apple-system, Segoe UI, sans-serif" font-size="13" fill="#5c6773">每个点是一个主模型；x 为 mean readout acc，y 为 mean official benchmark delta。</text>
+  <line x1="140.3" y1="66" x2="140.3" y2="448" stroke="#e7ebef"/>
+  <text x="140.3" y="472" text-anchor="middle" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.75</text>
+  <line x1="381.5" y1="66" x2="381.5" y2="448" stroke="#e7ebef"/>
+  <text x="381.5" y="472" text-anchor="middle" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.80</text>
+  <line x1="622.7" y1="66" x2="622.7" y2="448" stroke="#e7ebef"/>
+  <text x="622.7" y="472" text-anchor="middle" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.85</text>
+  <line x1="864.0" y1="66" x2="864.0" y2="448" stroke="#e7ebef"/>
+  <text x="864.0" y="472" text-anchor="middle" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.90</text>
+  <line x1="92" y1="448.0" x2="864" y2="448.0" stroke="#e7ebef"/>
+  <text x="78" y="452.0" text-anchor="end" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.00</text>
+  <line x1="92" y1="365.0" x2="864" y2="365.0" stroke="#e7ebef"/>
+  <text x="78" y="369.0" text-anchor="end" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.05</text>
+  <line x1="92" y1="281.9" x2="864" y2="281.9" stroke="#e7ebef"/>
+  <text x="78" y="285.9" text-anchor="end" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.10</text>
+  <line x1="92" y1="198.9" x2="864" y2="198.9" stroke="#e7ebef"/>
+  <text x="78" y="202.9" text-anchor="end" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.15</text>
+  <line x1="92" y1="115.8" x2="864" y2="115.8" stroke="#e7ebef"/>
+  <text x="78" y="119.8" text-anchor="end" font-size="12" font-family="-apple-system, Segoe UI, sans-serif" fill="#5c6773">0.20</text>
+  <line x1="92" y1="448" x2="864" y2="448" stroke="#1a1f25"/>
+  <line x1="92" y1="66" x2="92" y2="448" stroke="#1a1f25"/>
+  <text x="478.0" y="502" text-anchor="middle" font-family="-apple-system, Segoe UI, sans-serif" font-size="13" fill="#1a1f25">Mean readability (MC readout acc)</text>
+  <text transform="translate(24,257.0) rotate(-90)" text-anchor="middle" font-family="-apple-system, Segoe UI, sans-serif" font-size="13" fill="#1a1f25">Mean steerability delta</text>
+  <circle cx="236.8" cy="97.2" r="8" fill="#1a6fb5" opacity="0.88"/>
+  <text x="246.8" y="89.2" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Qwen0.6B</text>
+  <circle cx="386.3" cy="106.0" r="8" fill="#1a6fb5" opacity="0.88"/>
+  <text x="396.3" y="98.0" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Qwen1.7B</text>
+  <circle cx="521.4" cy="352.7" r="8" fill="#1a8c5e" opacity="0.88"/>
+  <text x="531.4" y="344.7" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Gemma2B</text>
+  <circle cx="526.2" cy="261.7" r="8" fill="#6b4fa0" opacity="0.88"/>
+  <text x="536.2" y="253.7" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Llama8B</text>
+  <circle cx="661.3" cy="335.9" r="8" fill="#1a8c5e" opacity="0.88"/>
+  <text x="671.3" y="327.9" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Gemma9B</text>
+  <circle cx="724.1" cy="250.2" r="8" fill="#1a6fb5" opacity="0.88"/>
+  <text x="734.1" y="242.2" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Qwen14B</text>
+  <circle cx="434.6" cy="412.8" r="8" fill="#1a8c5e" opacity="0.88"/>
+  <text x="444.6" y="404.8" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Gemma27B</text>
+  <circle cx="772.3" cy="148.0" r="8" fill="#1a6fb5" opacity="0.88"/>
+  <text x="782.3" y="140.0" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Qwen32B</text>
+  <circle cx="772.3" cy="345.7" r="8" fill="#6b4fa0" opacity="0.88"/>
+  <text x="782.3" y="337.7" font-size="11" font-family="-apple-system, Segoe UI, sans-serif" fill="#1a1f25">Llama70B</text>
+</svg>
