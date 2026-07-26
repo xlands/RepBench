@@ -1,5 +1,7 @@
 # Latent Capability Representation Benchmark
 
+**English** | [中文](README_zh.md)
+
 **Turn *any* evaluation benchmark into clean per-capability representation data — then measure how well capability directions generalize across benchmarks, models, and probing methods.**
 
 Most representation-engineering work extracts a "capability direction" from a single dataset, so the direction inherits that dataset's format and token quirks. This project builds the missing data layer: a capability taxonomy mined from the benchmark literature, a probe corpus where **every capability is backed by ≥ 2 independent benchmarks**, and an evaluation showing that pooling across benchmarks is what makes capability vectors clean — for any model and any probing method.
@@ -10,7 +12,7 @@ Most representation-engineering work extracts a "capability direction" from a si
 
 ![Data pipeline](asset/fig1_pipeline.png)
 
-Given any new benchmark, the pipeline crawls it, audits every text↔capability mapping with a 10-model hidden-state vote plus human adjudication, probe-tests the result, and feeds the exposed gaps back into crawling — a repeatable loop, not a one-off dataset. The output is **method-agnostic**: the same clean data drives DiffMean, PCA/LAT, CAA, linear probes, SAEs, and ReFT-r1 alike (method taxonomy following [AxBench](https://arxiv.org/abs/2501.17148)).
+Given any new benchmark, the pipeline crawls it, audits every text↔capability mapping with a 10-model hidden-state vote plus human adjudication, probe-tests the result, and feeds the exposed gaps back into crawling — a repeatable loop, not a one-off dataset. The output is **method-agnostic**: the same clean data drives DiffMean, PCA/LAT, CAA, linear probes, SAEs, J-Lens, and ReFT-r1 alike.
 
 *Interactive version: [`doc/figures/pipeline.html`](doc/figures/pipeline.html)*
 
@@ -40,12 +42,12 @@ Every (capability, model, method) cell is evaluated with **leave-one-benchmark-o
 
 | | diff-mean | linear probe (LR) | PCA |
 |---|---|---|---|
-| Mean LOBO AUC (all models) | **0.783** | 0.767 | 0.729 |
-| Per-cell wins | 37% | **46%** | 17% |
+| Mean LOBO AUC (all models) | **0.778** | 0.764 | 0.724 |
+| Per-cell wins | 36% | **47%** | 17% |
 
-The honest reading: **diff-mean has the highest mean on 10 of 11 models** (highest floor, training-free — the best single default), while **LR wins the most individual cells** (it ekes out wins on easy near-ceiling clusters but crashes on hard ones). The one exception is instructive: on the R1-distilled Qwen3-8B, LR overtakes diff-mean (0.754 vs 0.732) — and the distillation itself drops diff-mean by 0.053 relative to the *same-architecture* base (Qwen3-8B: 0.785), a controlled hint that reasoning post-training reshapes how linearly capabilities are encoded. The method axis separates more (~0.05) than the model axis (~0.02) — the probing method is itself a meaningful evaluation dimension.
+The honest reading: **diff-mean has the highest mean on 10 of 12 models** (highest floor, training-free — the best single default), while **LR wins the most individual cells** (it ekes out wins on easy near-ceiling clusters but crashes on hard ones). The two exceptions are exactly the two non-standard models: the R1-distilled Qwen3-8B (LR 0.754 vs 0.732) and the DeepSeek-V4-Flash base model (LR 0.733 vs 0.720). The distill case is a controlled comparison — same architecture as Qwen3-8B, yet distillation drops diff-mean by 0.053 (from 0.785) — a hint that reasoning post-training reshapes how linearly capabilities are encoded. The method axis still separates more (~0.05) than the model axis (~0.02) — the probing method is itself a meaningful evaluation dimension.
 
-**Models evaluated (11):** Qwen3-0.6B / 1.7B / 4B / 8B / 32B, Qwen3.5-9B, Llama-3.1-8B-Instruct, Gemma2-9B, Gemma4-12B / 31B, and DeepSeek-R1-0528-Qwen3-8B — the latter is a Qwen3-8B distilled on R1 traces (same architecture as Qwen3-8B), included as a post-training contrast rather than an extra architecture family.
+**Models evaluated (12):** Qwen3-0.6B / 1.7B / 4B / 8B / 32B, Qwen3.5-9B, Llama-3.1-8B-Instruct, Gemma2-9B, Gemma4-12B / 31B, DeepSeek-R1-0528-Qwen3-8B (a Qwen3-8B distilled on R1 traces — included as a post-training contrast, not an extra architecture), and DeepSeek-V4-Flash-Base (fp8 MoE with hyper-connection residual streams; probed as a raw base model — no chat template, the four parallel residual streams averaged, fp8 dequantized to bf16).
 
 *Interactive version: [`doc/figures/method_model_eval.html`](doc/figures/method_model_eval.html)*
 
@@ -59,7 +61,7 @@ The honest reading: **diff-mean has the highest mean on 10 of 11 models** (highe
 | Probe texts | 46,149 |
 | Capability clusters | 94, **100% backed by ≥ 2 benchmarks** (median 3, max 21) |
 | Capability families | 13 |
-| Models × layers | 11 models × 4 fractional depths (last-token hidden states) |
+| Models × layers | 12 models × 4 fractional depths (last-token hidden states) |
 | Protocol | leave-one-benchmark-out AUC, stratified negatives |
 
 ## Honest limitations
@@ -67,7 +69,7 @@ The honest reading: **diff-mean has the highest mean on 10 of 11 models** (highe
 - **Coverage:** multimodal grounding and planning & tool use are absent from the probe corpus (image/agentic inputs needed) — the taxonomy shows exactly how big that gap is.
 - **Structure claim:** we claim *coarse* discrete structure emerges after pooling (interior silhouette peak at small k), never "exactly N clusters" — best-k varies by model (4–15).
 - **Taxonomy alignment:** model-discovered clusters do not reproduce the human 13-family taxonomy (ARI ≈ 0.1). Models organize capabilities their own way.
-- **Method ranking depends on the statistic:** diff-mean wins on means (10 of 11 models), LR on per-cell counts — and on the R1-distilled model LR wins the mean too. We report both.
+- **Method ranking depends on the statistic:** diff-mean wins on means (10 of 12 models), LR on per-cell counts — and on the two non-standard models (the R1 distill and the V4 base MoE) LR wins the mean too. We report both.
 
 ## Repository layout
 
