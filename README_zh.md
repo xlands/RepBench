@@ -77,33 +77,30 @@
 asset/                          README 使用的渲染图（PNG）
 doc/figures/                    四张图的交互式 HTML 版本
 src/representation_cluster/     表征拟合管线（已封装）
-tmp_scripts/
-  benchmark_data_crawl/         工作管线：爬取 → 映射 → 清洗 →
-                                extract_hidden.py → probe_clusters.py →
-                                method_compare.py → repcluster.py / repclean.py
-                                + 出图脚本（build_fig*.py）
-  capability_clustering_v2/     分类体系挖掘 + 能力全景图
-data/                           进度快照
+scripts/                        语料构建、隐状态抽取、LOBO 读出、
+                                SAE、J-Lens 与结果汇总
+data/                           公开的 46,149 条探针语料与 manifest
+results/                        固定的深度扫描与论文方法结果
+CODE_AND_DATA.md                详细的 artifact 与复现指南
 ```
 
 ## 复现
 
 ```bash
-cd tmp_scripts/benchmark_data_crawl
+python3 -m pip install -r requirements.txt
 
 # 1. 抽取最后 token 隐状态（每张 GPU 一个分片）
-CUDA_VISIBLE_DEVICES=0 python3 extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
+CUDA_VISIBLE_DEVICES=0 python3 scripts/extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
 #    大型 fp8 权重：加 --device-map auto --dequant-fp8
 
 # 2. diff-mean 探针 + 最优层选择（LOBO）
-python3 probe_clusters.py --tag mymodel
+python3 scripts/probe_clusters.py --tag mymodel
 
 # 3. 最优层上的方法对比（diff-mean / LR / PCA）
-python3 method_compare.py --tag mymodel
+python3 scripts/method_compare.py --tag mymodel
 
-# 4. 表征聚类：原始 46k 文本（脏）与池化后 94 向量（干净）
-python3 repcluster.py --tag mymodel
-python3 repclean.py   --tag mymodel
+# 4. 汇总各方法的最佳观测深度
+python3 scripts/summarize_four_method_best_depth.py
 ```
 
 ## 引用

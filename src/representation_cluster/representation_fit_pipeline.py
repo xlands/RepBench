@@ -29,7 +29,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CLUSTER_DIR = PROJECT_ROOT / "tmp_scripts" / "capability_clustering_baseline"
 DEFAULT_OUT_DIR = Path(__file__).resolve().parent / "results"
 COMPASS_BASE_URL = "https://compass.llm.shopee.io/compass-api/v1"
-DEFAULT_API_KEY = "ae305dd9329d39b954feea05aa46bfe6d3f16485f7fa0ff74d7acbeb0212782c"
 DEFAULT_MODEL = "DeepSeek-V3.2"
 
 _THREAD_LOCAL = threading.local()
@@ -257,6 +256,11 @@ def run_one(row, args):
 
 
 def cmd_run_judge(args):
+    if not args.api_key:
+        raise SystemExit(
+            "COMPASS_API_KEY is required for judge-backed stages; "
+            "set it in the environment or pass --api-key."
+        )
     prompt_path = Path(args.out_dir) / "representation_fit_prompts.jsonl"
     if not prompt_path.exists():
         raise SystemExit(f"Missing prompts: {prompt_path}. Run prepare-prompts first.")
@@ -432,7 +436,7 @@ def add_common(parser):
 
 
 def add_api(parser):
-    parser.add_argument("--api-key", default=os.environ.get("COMPASS_API_KEY") or DEFAULT_API_KEY)
+    parser.add_argument("--api-key", default=os.environ.get("COMPASS_API_KEY"))
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--concurrency", type=int, default=20)
     parser.add_argument("--thinking", action="store_true")

@@ -77,33 +77,30 @@ The honest reading: **diff-mean has the highest mean on 10 of 12 models** (highe
 asset/                          rendered figures (PNG) used in this README
 doc/figures/                    interactive HTML versions of the four figures
 src/representation_cluster/     representation-fitting pipeline (packaged)
-tmp_scripts/
-  benchmark_data_crawl/         the working pipeline: crawl → map → clean →
-                                extract_hidden.py → probe_clusters.py →
-                                method_compare.py → repcluster.py / repclean.py
-                                + figure builders (build_fig*.py)
-  capability_clustering_v2/     taxonomy mining + the capability map
-data/                           progress snapshots
+scripts/                        corpus construction, hidden-state extraction,
+                                LOBO readouts, SAE, J-Lens, and aggregation
+data/                           released 46,149-probe corpus and manifests
+results/                        frozen depth sweeps and reported method results
+CODE_AND_DATA.md                detailed artifact and reproduction guide
 ```
 
 ## Reproduce
 
 ```bash
-cd tmp_scripts/benchmark_data_crawl
+python3 -m pip install -r requirements.txt
 
 # 1. extract last-token hidden states (one shard per GPU)
-CUDA_VISIBLE_DEVICES=0 python3 extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
+CUDA_VISIBLE_DEVICES=0 python3 scripts/extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
 #    large fp8 checkpoints: add --device-map auto --dequant-fp8
 
 # 2. diff-mean probe + best-layer selection (LOBO)
-python3 probe_clusters.py --tag mymodel
+python3 scripts/probe_clusters.py --tag mymodel
 
 # 3. method comparison at the best layer (diff-mean / LR / PCA)
-python3 method_compare.py --tag mymodel
+python3 scripts/method_compare.py --tag mymodel
 
-# 4. representation clustering: raw 46k texts (dirty) and pooled 94 vectors (clean)
-python3 repcluster.py --tag mymodel
-python3 repclean.py   --tag mymodel
+# 4. aggregate method-specific best observed depths
+python3 scripts/summarize_four_method_best_depth.py
 ```
 
 ## Citation

@@ -36,6 +36,12 @@ Or run all stages:
 python3 representation_fit_pipeline.py run-all
 ```
 
+Set the API credential in the environment before running judge-backed stages:
+
+```bash
+export COMPASS_API_KEY=your_api_key
+```
+
 Defaults:
 
 - model: `DeepSeek-V3.2`
