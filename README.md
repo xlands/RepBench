@@ -1,8 +1,8 @@
-# Latent Capability Representation Benchmark
+# RepBench: Compiling Benchmarks into Capability Representations for Large Language Models
 
 **English** | [中文](README_zh.md)
 
-**Turn *any* evaluation benchmark into clean per-capability representation data — then measure how well capability directions generalize across benchmarks, models, and probing methods.**
+**[Paper on arXiv](https://arxiv.org/abs/2607.28008)** · Turn *any* evaluation benchmark into clean per-capability representation data — then measure how well capability directions generalize across benchmarks, models, and probing methods.
 
 Most representation-engineering work extracts a "capability direction" from a single dataset, so the direction inherits that dataset's format and token quirks. This project builds the missing data layer: a capability taxonomy mined from the benchmark literature, a probe corpus where **every capability is backed by ≥ 2 independent benchmarks**, and an evaluation showing that pooling across benchmarks is what makes capability vectors clean — for any model and any probing method.
 
@@ -10,46 +10,48 @@ Most representation-engineering work extracts a "capability direction" from a si
 
 ## 1 · The pipeline: an open-source, reusable, closed-loop engine
 
-![Data pipeline](asset/fig1_pipeline.png)
+![RepBench pipeline](asset/fig1_pipeline.svg)
 
 Given any new benchmark, the pipeline crawls it, audits every text↔capability mapping with a 10-model hidden-state vote plus human adjudication, probe-tests the result, and feeds the exposed gaps back into crawling — a repeatable loop, not a one-off dataset. The output is **method-agnostic**: the same clean data drives DiffMean, PCA/LAT, CAA, linear probes, SAEs, J-Lens, and ReFT-r1 alike.
 
-*Interactive version: [`doc/figures/pipeline.html`](doc/figures/pipeline.html)*
+The updated overview figure shows the complete compile → audit → probe → recrawl loop used in the paper.
 
 ## 2 · The capability landscape: what benchmarks actually measure
 
-![Capability landscape](asset/fig2_capability_map.png)
+![Capability landscape](asset/fig2_capability_map.svg)
 
 We crawl **13,427 benchmark papers** and extract **14,896 capability mentions**, which deduplicate into **9,576 concepts** (points above, UMAP layout, size ∝ mentions), clustered into **182 capability clusters across 13 families** (the eight largest families are individually colored — multimodal grounding, reasoning, coding & debugging, safety & robustness, planning & tool use, factuality & grounding, social & pragmatic, multilinguality — the rest fold into gray). Labels mark the largest clusters. **94 of the 182 clusters** are backed by enough text benchmarks to be probed; multimodal grounding (0/31) and planning & tool use (0/23) require image inputs or agentic rollouts and are reported as an explicit coverage gap of text-only probing.
 
-*Interactive version (zoom / search / isolate families): [`doc/figures/capability_map.html`](doc/figures/capability_map.html)*
+The colors in the figure denote taxonomy families; point size is proportional to benchmark-literature mention count.
 
 ## 3 · Clean capability representations: before → after pooling
 
-![Representation clustering](asset/fig3_representation_clusters.png)
+![Pooled representations across Qwen models](asset/fig3_representation_models_qwen.svg)
+
+![Pooled representations across additional models](asset/fig3_representation_models_other.svg)
+
+![Representations before and after cross-benchmark pooling](asset/fig3_representation_pooling.svg)
 
 A single benchmark's hidden states carry that benchmark's own fingerprint. Because every capability in our corpus is covered by **≥ 2 benchmarks (median 3)**, we can average each capability's representation *across its benchmarks* — the benchmark-specific variance cancels, leaving a clean per-capability vector.
 
-**(A)** Six models each cluster their 94 pooled capability vectors into a few well-separated groups. **(B)** The same model before vs. after pooling: 46,149 raw per-text vectors smear into one cloud, while the 94 pooled vectors separate cleanly. Quantitatively, silhouette-vs-k climbs monotonically to the sweep ceiling on raw vectors (no natural cluster count) but shows an interior peak at small k (4–15) after pooling — **for every model tested, without exception**. We claim the emergence of coarse structure, not an exact cluster count; the model-discovered clusters do not reproduce the human family taxonomy (ARI ≈ 0.1), which is expected and interesting in its own right.
-
-*Interactive version: [`doc/figures/representation_clusters.html`](doc/figures/representation_clusters.html)*
+The top two panels show the 94 pooled capability vectors for six checkpoints; the bottom panel contrasts Qwen3-8B before versus after pooling. Raw per-text vectors smear into one cloud, while pooled vectors show an interior silhouette optimum at small k (4–15) for every evaluated model. Colors in the pooled panels are model-discovered clusters; raw-vector colors are taxonomy families.
 
 ## 4 · Evaluation: models × probing methods under one protocol
 
-![Method × model evaluation](asset/fig4_method_model_eval.png)
+![Method × model evaluation](asset/fig4_method_model_eval.svg)
 
 Every (capability, model, method) cell is evaluated with **leave-one-benchmark-out (LOBO)**: the direction is trained without any text from the held-out benchmark and tested on it — cross-benchmark generalization, not memorization. Each model is probed at its own best layer out of four fractional depths (25/50/75/100%).
 
-| | diff-mean | linear probe (LR) | PCA |
-|---|---|---|---|
-| Mean LOBO AUC (all models) | **0.778** | 0.764 | 0.724 |
-| Per-cell wins | 36% | **47%** | 17% |
+| | diff-mean | linear probe (LR) | PCA | J-Lens |
+|---|---:|---:|---:|---:|
+| Mean LOBO AUC (1,128 cells) | **0.778** | 0.769 | 0.734 | 0.650 |
+| Per-cell wins | 30% | **38%** | 17% | 15% |
 
-The honest reading: **diff-mean has the highest mean on 10 of 12 models** (highest floor, training-free — the best single default), while **LR wins the most individual cells** (it ekes out wins on easy near-ceiling clusters but crashes on hard ones). The two exceptions are exactly the two non-standard models: the R1-distilled Qwen3-8B (LR 0.754 vs 0.732) and the DeepSeek-V4-Flash base model (LR 0.733 vs 0.720). The distill case is a controlled comparison — same architecture as Qwen3-8B, yet distillation drops diff-mean by 0.053 (from 0.785) — a hint that reasoning post-training reshapes how linearly capabilities are encoded. The method axis still separates more (~0.05) than the model axis (~0.02) — the probing method is itself a meaningful evaluation dimension.
+The complementary aggregate views favor different readouts: **diff-mean has the highest grand mean** (and is highest on 10 of 12 models), while **LR wins the most individual cells**. PCA trails the two label-using activation readouts. J-Lens is weaker as a detector, but supplies a token-indexed, semantically named interface unavailable to the other methods. The R1-distilled Qwen3-8B and DeepSeek-V4-Flash base model are the two cases where LR has the highest model-level mean.
 
 **Models evaluated (12):** Qwen3-0.6B / 1.7B / 4B / 8B / 32B, Qwen3.5-9B, Llama-3.1-8B-Instruct, Gemma2-9B, Gemma4-12B / 31B, DeepSeek-R1-0528-Qwen3-8B (a Qwen3-8B distilled on R1 traces — included as a post-training contrast, not an extra architecture), and DeepSeek-V4-Flash-Base (fp8 MoE with hyper-connection residual streams; probed as a raw base model — no chat template, the four parallel residual streams averaged, fp8 dequantized to bf16).
 
-*Interactive version: [`doc/figures/method_model_eval.html`](doc/figures/method_model_eval.html)*
+The figure reports each method at its own best observed valid depth; the full per-model values and layers are in the [paper](https://arxiv.org/abs/2607.28008).
 
 ---
 
@@ -74,8 +76,8 @@ The honest reading: **diff-mean has the highest mean on 10 of 12 models** (highe
 ## Repository layout
 
 ```
-asset/                          rendered figures (PNG) used in this README
-doc/figures/                    interactive HTML versions of the four figures
+asset/                          rendered vector figures (SVG) used in this README
+doc/figures/                    earlier interactive figure versions
 src/representation_cluster/     representation-fitting and evaluation pipeline
   scripts/                      corpus construction, hidden-state extraction,
                                 LOBO readouts, SAE, J-Lens, and aggregation
@@ -106,11 +108,11 @@ python3 src/representation_cluster/scripts/summarize_four_method_best_depth.py
 ## Citation
 
 ```bibtex
-@article{latent_capability_benchmark_2026,
-  title   = {A Latent Capability Representation Benchmark: Clean Per-Capability
-             Data for Representation Engineering},
-  author  = {...},
-  journal = {Under review},
+@article{li2026repbench,
+  title   = {RepBench: Compiling Benchmarks into Capability Representations
+             for Large Language Models},
+  author  = {Li, Yanshi and Bai, Xueru and Liu, Shuman and Zhang, Long},
+  journal = {arXiv preprint arXiv:2607.28008},
   year    = {2026}
 }
 ```
