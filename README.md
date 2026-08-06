@@ -76,31 +76,31 @@ The honest reading: **diff-mean has the highest mean on 10 of 12 models** (highe
 ```
 asset/                          rendered figures (PNG) used in this README
 doc/figures/                    interactive HTML versions of the four figures
-src/representation_cluster/     representation-fitting pipeline (packaged)
-scripts/                        corpus construction, hidden-state extraction,
+src/representation_cluster/     representation-fitting and evaluation pipeline
+  scripts/                      corpus construction, hidden-state extraction,
                                 LOBO readouts, SAE, J-Lens, and aggregation
+  results/                      frozen depth sweeps and method results
+  requirements.txt              pipeline dependencies
 data/                           released 46,149-probe corpus and manifests
-results/                        frozen depth sweeps and reported method results
-CODE_AND_DATA.md                detailed artifact and reproduction guide
 ```
 
 ## Reproduce
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r src/representation_cluster/requirements.txt
 
 # 1. extract last-token hidden states (one shard per GPU)
-CUDA_VISIBLE_DEVICES=0 python3 scripts/extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
+CUDA_VISIBLE_DEVICES=0 python3 src/representation_cluster/scripts/extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
 #    large fp8 checkpoints: add --device-map auto --dequant-fp8
 
 # 2. diff-mean probe + best-layer selection (LOBO)
-python3 scripts/probe_clusters.py --tag mymodel
+python3 src/representation_cluster/scripts/probe_clusters.py --tag mymodel
 
 # 3. method comparison at the best layer (diff-mean / LR / PCA)
-python3 scripts/method_compare.py --tag mymodel
+python3 src/representation_cluster/scripts/method_compare.py --tag mymodel
 
 # 4. aggregate method-specific best observed depths
-python3 scripts/summarize_four_method_best_depth.py
+python3 src/representation_cluster/scripts/summarize_four_method_best_depth.py
 ```
 
 ## Citation

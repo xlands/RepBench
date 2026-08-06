@@ -76,31 +76,31 @@
 ```
 asset/                          README 使用的渲染图（PNG）
 doc/figures/                    四张图的交互式 HTML 版本
-src/representation_cluster/     表征拟合管线（已封装）
-scripts/                        语料构建、隐状态抽取、LOBO 读出、
+src/representation_cluster/     表征拟合与评估管线
+  scripts/                      语料构建、隐状态抽取、LOBO 读出、
                                 SAE、J-Lens 与结果汇总
+  results/                      固定的深度扫描与方法结果
+  requirements.txt              管线依赖
 data/                           公开的 46,149 条探针语料与 manifest
-results/                        固定的深度扫描与论文方法结果
-CODE_AND_DATA.md                详细的 artifact 与复现指南
 ```
 
 ## 复现
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r src/representation_cluster/requirements.txt
 
 # 1. 抽取最后 token 隐状态（每张 GPU 一个分片）
-CUDA_VISIBLE_DEVICES=0 python3 scripts/extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
+CUDA_VISIBLE_DEVICES=0 python3 src/representation_cluster/scripts/extract_hidden.py --model <hf_path> --tag mymodel --shard 0 --nshards 4
 #    大型 fp8 权重：加 --device-map auto --dequant-fp8
 
 # 2. diff-mean 探针 + 最优层选择（LOBO）
-python3 scripts/probe_clusters.py --tag mymodel
+python3 src/representation_cluster/scripts/probe_clusters.py --tag mymodel
 
 # 3. 最优层上的方法对比（diff-mean / LR / PCA）
-python3 scripts/method_compare.py --tag mymodel
+python3 src/representation_cluster/scripts/method_compare.py --tag mymodel
 
 # 4. 汇总各方法的最佳观测深度
-python3 scripts/summarize_four_method_best_depth.py
+python3 src/representation_cluster/scripts/summarize_four_method_best_depth.py
 ```
 
 ## 引用
